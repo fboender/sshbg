@@ -1,0 +1,104 @@
+#!/usr/bin/env python
+
+import os
+import time
+import sys
+import json
+import re
+
+bg_esc_host = "\033]11;{}\a"
+bg_esc_reset = "\033]11;{}\a"
+
+
+class SSHBGError(Exception):
+    pass
+
+
+def err_exit(err_msg, exit_code):
+    """
+    Print error to stderr and exit with exit code.
+    """
+    sys.stderr.write("{}\n".format(err_msg))
+    sys.exit(exit_code)
+
+
+def read_config(config_file):
+    """
+    Read and parse configuration file.
+    """
+    config_contents = open(config_file, "r").read()
+    try:
+        config = json.loads(config_contents)
+        return config
+    except ValueError:
+        raise SSHBGError("Invalid JSON file: {}".format(config_file), 2)
+
+
+def get_colors(config, hostname):
+    """
+    Return ANSI Escape sequences for normal and hostname's background color.
+    """
+    host_profile = config["hostnames"].get(hostname, None)
+    bg_color_normal = config["normal_bg_color"]
+    bg_color_host = config["profiles"].get(host_profile, None)
+
+    if bg_color_host is None:
+        # Try regex matches
+        for match_re, profile_name in config["hostnames"].items():
+            if re.match(match_re, hostname) is not None:
+                bg_color_host = config["profiles"][profile_name]
+                break
+
+    if bg_color_host is None:
+        return None
+
+    return (
+        bg_esc_reset.format(bg_color_normal),
+        bg_esc_host.format(bg_color_host)
+    )
+
+
+def wait_parent_pid(parent_pid):
+    """
+    Wait until `parent_pid` has exited.
+    """
+    while True:
+        try:
+            os.kill(parent_pid, 0)
+        except OSError:
+            # Parent pid (ssh) exited
+            return
+        time.sleep(0.1)
+
+
+if __name__ == "__main__":
+    try:
+        # Arguments
+        if len(sys.argv) < 1:
+            err_exit("Usage: {} <hostname>".format(sys.argv[0]), 1)
+        hostname = sys.argv[1]
+        config_file = os.path.expanduser("~/.config/sshbg.conf")
+
+        config = read_config(config_file)
+        colors = get_colors(config, hostname)
+        if not colors:
+            # No colors defined for hostname
+            sys.exit(0)
+        bg_esc_reset, bg_esc_host = colors
+
+        # Get our parent pid, which is the PID for the ssh process.
+        ssh_pid = os.getppid()
+
+        # Write out the ANSI escape seq to change background color
+        sys.stdout.write(bg_esc_host)
+
+        # Work into the background so we can wait for the ssh process to exit.
+        pid = os.fork()
+        if pid == 0:
+            # Child process. Wait for ssh process to exit
+            wait_parent_pid(ssh_pid)
+            # Reset the background color
+            sys.stdout.write(bg_esc_reset)
+    except SSHBGError as err:
+        err_msg, err_exit_code = err
+        err_exit(err_msg, err_exit_code)
