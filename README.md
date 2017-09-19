@@ -44,6 +44,11 @@ escape sequence. It's possible to detect if the SSH command has exited from
 the locally executed command by polling the parent process PID in the
 backgrond. Combine the three and presto! Background colors.
 
+sshbg matches (regex) entries in a configuration file against the provided
+hostname. That results in a profile name, which has a background color
+associated with it. See the "Config file" section at the bottom of this page
+for more info.
+
 ## Installation and usage
 
 Requirements:
