@@ -94,7 +94,7 @@ if __name__ == "__main__":
         # Write out the ANSI escape seq to change background color
         sys.stdout.write(bg_esc_host)
 
-        # Work into the background so we can wait for the ssh process to exit.
+        # Fork into the background so we can wait for the ssh process to exit.
         pid = os.fork()
         if pid == 0:
             # Child process. Wait for ssh process to exit
