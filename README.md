@@ -9,6 +9,8 @@ terminals or bug reports if this setup does not work for you.
 
 ![Demo](demo.gif)
 
+(Yes, all the hosts are actually localhost. I was lazy).
+
 ## Which terminals are (un)supported?
 
 The following terminal emulators are supported:
