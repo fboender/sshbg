@@ -30,6 +30,9 @@ To see if your terminal uses libvte, run the following command:
 If there are any results, your terminal is not supported. Unless it's Tilix,
 in which case for some reason it *is* supported. I dunno why, don't ask.
 
+Again, **don't ask me for support for your specific terminal**. Changes are
+very good that it can't be supported.
+
 
 ## How does it work?
 
