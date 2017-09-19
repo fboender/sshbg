@@ -113,3 +113,7 @@ The keys:
   change the background color itself anymore. No idea why.
 * Probably a million different strange behaviours. Did I mention I don't
   support this project already?
+
+## License
+
+MIT license. See `LICENSE` file.
