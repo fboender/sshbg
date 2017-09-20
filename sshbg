@@ -91,6 +91,13 @@ if __name__ == "__main__":
         # Get our parent pid, which is the PID for the ssh process.
         ssh_pid = os.getppid()
 
+        # Verify that this is not a forwarding connection.
+        cmdline = open("/proc/{}/cmdline".format(ssh_pid), "r").read().split('\0')
+        if "-W" in cmdline or "nc" in cmdline:
+            # ProxyCommand being used. Don't do anything or SSH will wait for
+            # our forked child.
+            sys.exit(0)
+
         # Write out the ANSI escape seq to change background color
         sys.stdout.write(bg_esc_host)
 
