@@ -115,7 +115,8 @@ The keys:
 * The hostname is the one you specify on the commandline, **NOT** necessarily
   the real remote hostname.
 * Manually chained SSH (`ssh machine_a -> ssh machine_b`) will not work.
-  Automatically chained SSH (through `ProxyCommand`) *will* work.
+  Automatically chained SSH (through `ProxyCommand`) *will* work. SSH chaining
+  with the `netcat` tool seems to fail.
 * When SSH exits, the terminal background color is reset to the value of
   `normal_bg_color` in the configuration file. I have not yet found a way to
   reset the original terminal color as defined in your terminal.
