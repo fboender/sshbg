@@ -112,8 +112,8 @@ The keys:
 
 ## Remarks, weirdness and bugs.
 
-* The hostname is the one configured in your SSH configuration, **NOT** the
-  real remote hostname.
+* The hostname is the one you specify on the commandline, **NOT** necessarily
+  the real remote hostname.
 * Manually chained SSH (`ssh machine_a -> ssh machine_b`) will not work.
   Automatically chained SSH (through `ProxyCommand`) *will* work.
 * When SSH exits, the terminal background color is reset to the value of
