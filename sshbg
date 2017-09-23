@@ -60,6 +60,16 @@ def get_colors(config, hostname):
     )
 
 
+def is_forward_connection(pid):
+    """
+    Verify that this is not a forwarding connection. (ssh -W or netcat).
+    """
+    cmdline = open("/proc/{}/cmdline".format(pid), "r").read().split('\0')
+    if "-W" in cmdline or "nc" in cmdline:
+        return True
+    return False
+
+
 def wait_parent_pid(parent_pid):
     """
     Wait until `parent_pid` has exited.
@@ -92,8 +102,7 @@ if __name__ == "__main__":
         ssh_pid = os.getppid()
 
         # Verify that this is not a forwarding connection.
-        cmdline = open("/proc/{}/cmdline".format(ssh_pid), "r").read().split('\0')
-        if "-W" in cmdline or "nc" in cmdline:
+        if is_forward_connection(ssh_pid):
             # ProxyCommand being used. Don't do anything or SSH will wait for
             # our forked child.
             sys.exit(0)
