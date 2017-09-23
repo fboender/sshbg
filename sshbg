@@ -8,8 +8,7 @@ import sys
 import json
 import re
 
-bg_esc_host = "\033]11;{}\a"
-bg_esc_reset = "\033]11;{}\a"
+bg_esc = "\033]11;{}\a"
 
 
 class SSHBGError(Exception):
@@ -55,8 +54,8 @@ def get_colors(config, hostname):
         return None
 
     return (
-        bg_esc_reset.format(bg_color_normal),
-        bg_esc_host.format(bg_color_host)
+        bg_esc.format(bg_color_normal),
+        bg_esc.format(bg_color_host)
     )
 
 
