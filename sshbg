@@ -59,14 +59,29 @@ def get_colors(config, hostname):
     )
 
 
-def is_forward_connection(pid):
+def is_interactive(pid, hostname):
     """
-    Verify that this is not a forwarding connection. (ssh -W or netcat).
+    Verify that this SSH connection is interactive. Returns True if the
+    background should be changed, and False otherwise. Things that make a
+    connection Non-interactive:
+
+    - It's a forwarding connection (ProxyForward, -W, netcat)
+    - The user requested a remove command (ssh foo.com ls)
     """
     cmdline = open("/proc/{}/cmdline".format(pid), "r").read().split('\0')
-    if "-W" in cmdline or "nc" in cmdline:
-        return True
-    return False
+    hostname_index = cmdline.index(hostname)
+    ssh_args = cmdline[:hostname_index]
+    rest_args = cmdline[hostname_index + 1:]
+
+    # ProxyForward with "ssh -W"
+    if "-W" in ssh_args:
+        return False
+
+    # Remote execute command or ProxyForward with netcat
+    if rest_args != [""]:
+        return False
+
+    return True
 
 
 def wait_parent_pid(parent_pid):
@@ -101,9 +116,8 @@ if __name__ == "__main__":
         ssh_pid = os.getppid()
 
         # Verify that this is not a forwarding connection.
-        if is_forward_connection(ssh_pid):
-            # ProxyCommand being used. Don't do anything or SSH will wait for
-            # our forked child.
+        if not is_interactive(ssh_pid, hostname):
+            # Don't do anything or SSH will wait for our forked child.
             sys.exit(0)
 
         # Write out the ANSI escape seq to change background color
