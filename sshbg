@@ -69,7 +69,19 @@ def is_interactive(pid, hostname):
     - The user requested a remove command (ssh foo.com ls)
     """
     cmdline = open("/proc/{}/cmdline".format(pid), "r").read().split('\0')
-    hostname_index = cmdline.index(hostname)
+
+    hostname_index = None
+    try:
+        hostname_index = cmdline.index(hostname)
+    except ValueError:
+        # Hostname not found in commandline arguments. Maybe the username was
+        # included (user@hostname)?
+        for index, arg in enumerate(cmdline):
+            if arg.split('@')[-1] == hostname:
+                hostname_index = index
+    if hostname_index is None:
+        return
+
     ssh_args = cmdline[:hostname_index]
     rest_args = cmdline[hostname_index + 1:]
 
