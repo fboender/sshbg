@@ -11,28 +11,26 @@ terminals or bug reports if this setup does not work for you.
 
 (Yes, all the hosts are actually localhost. I was lazy).
 
-## Which terminals are (un)supported?
+## Supported emulators, caveat and problems
+
+This **doesn't work** with:
+
+* Almost every terminal emulator in existence (Terminator, Gnome terminal,
+  XFCE terminal, anything based on libvte).
+* When you're using `ControlMaster auto` in your SSH config.
 
 The following terminal emulators are supported:
 
 * [Tilix](https://github.com/gnunn1/tilix)
 * Xterm
 
-The following terminal emulators are **specifically** unsupported:
+To check if your terminal is supported, paste the following in your terminal:
 
-* Terminator
-* Gnome terminal
-* XFCE terminal
-* Everything based on libvte, which is basically every terminal in existence.
+     echo -e "\033]11;#007F00\a"
 
-To see if your terminal uses libvte, run the following command:
-  
-    ldd /path/to/your/terminal | grep vte
+If the background of your terminal changes to green, it is supported.
 
-If there are any results, your terminal is not supported. Unless it's Tilix,
-in which case for some reason it *is* supported. I dunno why, don't ask.
-
-Again, **don't ask me for support for your specific terminal**. Chances are
+**Don't ask me for support for your specific terminal**. Chances are
 very good that it can't be supported.
 
 
