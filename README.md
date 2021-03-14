@@ -16,7 +16,8 @@ terminals or bug reports if this setup does not work for you.
 This **doesn't work** with:
 
 * Almost every terminal emulator in existence (Terminator, Gnome terminal,
-  XFCE terminal, anything based on libvte).
+  XFCE terminal, anything based on libvte). **Update**: Seems to work now with
+  libvte v2.91+. Maybe older versions too.
 * When you're using `ControlMaster auto` in your SSH config.
 
 The following terminal emulators are supported:
