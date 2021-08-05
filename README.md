@@ -22,7 +22,7 @@ This **doesn't work** with:
 
 The following terminal emulators are supported:
 
-* [Tilix](https://github.com/gnunn1/tilix)
+* [Tilix](https://github.com/gnunn1/tilix) v1.7.7.
 * Xterm
 
 To check if your terminal is supported, paste the following in your terminal:
@@ -30,6 +30,11 @@ To check if your terminal is supported, paste the following in your terminal:
      echo -e "\033]11;#007F00\a"
 
 If the background of your terminal changes to green, it is supported.
+
+Tilix supported this in v1.7.7 and below. Since v1.7.7 it has been broken. See
+[this bugreport](https://github.com/gnunn1/tilix/issues/1759).  You can
+downgrade to [v1.7.7](https://github.com/gnunn1/tilix/releases/tag/1.7.7) to
+get it working again.
 
 **Don't ask me for support for your specific terminal**. Chances are
 very good that it can't be supported.
@@ -43,7 +48,7 @@ SSH lets you run a local command before the connection to the remote host is
 established. Some terminals allow you to set the background color with an
 escape sequence. It's possible to detect if the SSH command has exited from
 the locally executed command by polling the parent process PID in the
-backgrond. Combine the three and presto! Background colors.
+background. Combine the three and presto! Background colors.
 
 sshbg matches (regex) entries in a configuration file against the provided
 hostname. That results in a profile name, which has a background color
