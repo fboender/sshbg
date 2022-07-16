@@ -59,7 +59,7 @@ for more info.
 
 Requirements:
 
-* Python v2.6+ / v3.x+
+* Python v3.x+
 * A supported terminal
 
 Clone this repo:
